@@ -236,3 +236,8 @@ if DEBUG:
             "REFRESH_TOKEN_LIFETIME": timedelta(days=366),
         }
     )
+
+
+# App settings
+
+ONEC_REQUESTS_TIMEOUT = 60  # in seconds

@@ -2,6 +2,7 @@ from urllib.parse import quote, urlencode
 
 import environ
 import requests
+from django.conf import settings
 
 env = environ.Env()
 
@@ -54,7 +55,9 @@ class OneCODataClient:
 
         params_encoded = urlencode(params, quote_via=quote)
 
-        response = self.session.get(f"{url}?{params_encoded}", timeout=60)
+        response = self.session.get(
+            f"{url}?{params_encoded}", timeout=settings.ONEC_REQUESTS_TIMEOUT
+        )
         response.encoding = "utf-8-sig"
 
         if response.status_code == 401:
@@ -73,7 +76,9 @@ class OneCODataClient:
         params_encoded = urlencode(params, quote_via=quote)
 
         response = self.session.post(
-            f"{url}?{params_encoded}", json=create_data, timeout=60
+            f"{url}?{params_encoded}",
+            json=create_data,
+            timeout=settings.ONEC_REQUESTS_TIMEOUT,
         )
         response.encoding = "utf-8-sig"
 
@@ -92,7 +97,11 @@ class OneCODataClient:
 
         params_encoded = urlencode(params, quote_via=quote)
 
-        response = self.session.patch(f"{url}?{params_encoded}", json=update_data)
+        response = self.session.patch(
+            f"{url}?{params_encoded}",
+            json=update_data,
+            timeout=settings.ONEC_REQUESTS_TIMEOUT,
+        )
         response.encoding = "utf-8-sig"
 
         if response.status_code == 401:
@@ -110,7 +119,11 @@ class OneCODataClient:
 
         params_encoded = urlencode(params, quote_via=quote)
 
-        response = self.session.put(f"{url}?{params_encoded}", json=update_data)
+        response = self.session.put(
+            f"{url}?{params_encoded}",
+            json=update_data,
+            timeout=settings.ONEC_REQUESTS_TIMEOUT,
+        )
         response.encoding = "utf-8-sig"
 
         if response.status_code == 401:
@@ -126,7 +139,9 @@ class OneCODataClient:
 
         params_encoded = urlencode(params, quote_via=quote)
 
-        response = self.session.delete(f"{url}?{params_encoded}")
+        response = self.session.delete(
+            f"{url}?{params_encoded}", timeout=settings.ONEC_REQUESTS_TIMEOUT
+        )
         response.encoding = "utf-8-sig"
 
         if response.status_code == 401:

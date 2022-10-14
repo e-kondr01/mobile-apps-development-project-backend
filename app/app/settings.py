@@ -39,7 +39,7 @@ THIRD_PARTY_APPS = [
     "django_filters",
 ]
 
-LOCAL_APPS = ["users"]
+LOCAL_APPS = ["products", "users"]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
@@ -236,6 +236,22 @@ if DEBUG:
             "REFRESH_TOKEN_LIFETIME": timedelta(days=366),
         }
     )
+
+# Celery conf
+REDIS_HOST = env.str("REDIS_HOST", "redis")
+REDIS_PORT = env.str("REDIS_PORT", "6379")
+CELERY_BROKER_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/0"
+CELERY_RESULT_BACKEND = CELERY_BROKER_URL
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_TASK_TIME_LIMIT = 5 * 60
+CELERY_TASK_SOFT_TIME_LIMIT = 60 * 2
+
+CELERY_BEAT_SCHEDULE = {
+    "test-celery": {"task": "products.tasks.sync_products", "schedule": 60},
+}
 
 
 # App settings

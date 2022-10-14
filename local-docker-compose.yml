@@ -10,3 +10,8 @@ services:
       - ./dumps:/code/dumps
     env_file:
       - app/app/.env
+
+  redis:
+    image: redis:7.0.4
+    ports:
+      - "6379:6379"

@@ -35,11 +35,16 @@ Refer to:
 
 https://docs.docker.com/engine/install/
 
-### Deploy
+### Usage
 
-Use the script to start PSQL in Docker Compose, apply migrations and run development server:
+1. Use the script to start PSQL in Docker Compose, apply migrations and run development server:
 ```bash
 make local
+```
+
+2. To run Celery Beat for periodic tasks, use:
+```bash
+cd app && celery -A app worker -B -l INFO
 ```
 
 ## Swagger Docs

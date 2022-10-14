@@ -28,6 +28,8 @@ pip install -r app/requirements/local.txt
 cp app/app/local.example.env app/app/.env
 ```
 
+5. Set Django's secret key and params to access 1C in .env
+
 #### Docker and Docker compose
 Refer to:
 
@@ -50,10 +52,12 @@ During development, use Black formatter, Pylint and Flake8.
 ## Prod
 
 ### Installation
-Copy .env:
+1. Copy .env:
 ```bash
 cp app/app/production.example.env app/app/.env
 ```
+
+2. Set Django's secret key and params to access 1C in .env
 
 ### Deploy
 Use shortcut script:

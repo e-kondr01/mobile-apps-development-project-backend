@@ -246,14 +246,15 @@ CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TIMEZONE = TIME_ZONE
-CELERY_TASK_TIME_LIMIT = 5 * 60
-CELERY_TASK_SOFT_TIME_LIMIT = 60 * 2
+CELERY_TASK_TIME_LIMIT = 10 * 60
+CELERY_TASK_SOFT_TIME_LIMIT = 60 * 5
 
 CELERY_BEAT_SCHEDULE = {
-    "test-celery": {"task": "products.tasks.sync_products", "schedule": 60},
+    "sync-products": {"task": "products.tasks.sync_products", "schedule": 60 * 60},
+    "sync_sizes": {"task": "products.tasks.sync_sizes", "schedule": 60 * 60},
 }
 
 
 # App settings
 
-ONEC_REQUESTS_TIMEOUT = 60  # in seconds
+ONEC_REQUESTS_TIMEOUT = 90  # in seconds

@@ -11,6 +11,8 @@ class Product(models.Model):
 
     description = models.CharField(max_length=255, verbose_name="Описание")
 
+    size = models.CharField(max_length=127, blank=True, verbose_name="Размер")
+
     def __str__(self) -> str:
         return self.description
 

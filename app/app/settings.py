@@ -251,7 +251,14 @@ CELERY_TASK_SOFT_TIME_LIMIT = 60 * 5
 
 CELERY_BEAT_SCHEDULE = {
     "sync-products": {"task": "products.tasks.sync_products", "schedule": 60 * 60},
-    "sync_sizes": {"task": "products.tasks.sync_sizes", "schedule": 60 * 60},
+    "sync_price_types": {
+        "task": "products.tasks.sync_price_types",
+        "schedule": 60 * 60 * 24,
+    },
+    "sync_characteristics": {
+        "task": "products.tasks.sync_characteristics",
+        "schedule": 60 * 60 * 24,
+    },
 }
 
 

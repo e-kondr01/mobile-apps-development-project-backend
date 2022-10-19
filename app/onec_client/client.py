@@ -1,8 +1,11 @@
+import logging
 from urllib.parse import quote, urlencode
 
 import environ
 import requests
 from django.conf import settings
+
+logger = logging.getLogger(__name__)
 
 env = environ.Env()
 
@@ -58,6 +61,7 @@ class OneCODataClient:
         response = self.session.get(
             f"{url}?{params_encoded}", timeout=settings.ONEC_REQUESTS_TIMEOUT
         )
+        logger.info("Got response from OneC API")
         response.encoding = "utf-8-sig"
 
         if response.status_code == 401:

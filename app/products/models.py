@@ -51,3 +51,97 @@ class Characteristic(models.Model):
     class Meta:
         verbose_name = "Характеристика товара"
         verbose_name_plural = "Характеристики товаров"
+
+
+class Barcode(models.Model):
+
+    product: Product = models.ForeignKey(
+        to=Product,
+        on_delete=models.CASCADE,
+        related_name="barcodes",
+        verbose_name="Товар",
+    )
+
+    characteristic: Characteristic = models.ForeignKey(
+        to=Characteristic,
+        on_delete=models.CASCADE,
+        related_name="barcodes",
+        verbose_name="Характеристика",
+    )
+
+    barcode = models.CharField(max_length=255, verbose_name="Штрикход")
+
+    def __str__(self) -> str:
+        return f"Штрикод {self.product} {self.characteristic}"
+
+    class Meta:
+        verbose_name = "Штрихкод"
+        verbose_name_plural = "Штрихкоды"
+        constraints = [
+            models.UniqueConstraint(
+                name="unique_barcode", fields=("product", "characteristic", "barcode")
+            )
+        ]
+
+
+class ProductMovement(models.Model):
+
+    product: Product = models.ForeignKey(
+        to=Product,
+        on_delete=models.CASCADE,
+        related_name="product_movements",
+        verbose_name="Товар",
+    )
+
+    characteristic: Characteristic = models.ForeignKey(
+        to=Characteristic,
+        on_delete=models.CASCADE,
+        related_name="product_movements",
+        verbose_name="Характеристика",
+    )
+
+    amount = models.SmallIntegerField(verbose_name="Количество")
+
+    period = models.DateTimeField(verbose_name="Время и дата")
+
+    def __str__(self) -> str:
+        return f"Движение товара {self.product} {self.characteristic} {self.period} "
+
+    class Meta:
+        verbose_name = "Движение товара"
+        verbose_name_plural = "Движения товаров"
+
+
+class PriceChange(models.Model):
+
+    product: Product = models.ForeignKey(
+        to=Product,
+        on_delete=models.CASCADE,
+        related_name="price_changes",
+        verbose_name="Товар",
+    )
+
+    characteristic: Characteristic = models.ForeignKey(
+        to=Characteristic,
+        on_delete=models.CASCADE,
+        related_name="price_changes",
+        verbose_name="Характеристика",
+    )
+
+    price = models.PositiveSmallIntegerField(verbose_name="Цена")
+
+    period = models.DateTimeField(verbose_name="Время и дата")
+
+    price_type: PriceType = models.ForeignKey(
+        PriceType,
+        on_delete=models.CASCADE,
+        related_name="price_changes",
+        verbose_name="Вид цены",
+    )
+
+    def __str__(self) -> str:
+        return f"Изменение цены {self.product} {self.characteristic} {self.period}"
+
+    class Meta:
+        verbose_name = "Изменение цены"
+        verbose_name_plural = "Изменения цены"

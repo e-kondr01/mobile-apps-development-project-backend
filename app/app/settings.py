@@ -250,19 +250,27 @@ CELERY_TASK_TIME_LIMIT = 60 * 15
 CELERY_TASK_SOFT_TIME_LIMIT = 60 * 10
 
 CELERY_BEAT_SCHEDULE = {
-    # "sync-products": {"task": "products.tasks.sync_products", "schedule": 60 * 60},
-    # "sync_price_types": {
-    #     "task": "products.tasks.sync_price_types",
-    #     "schedule": 60 * 60 * 24,
-    # },
-    # "sync_characteristics": {
-    #     "task": "products.tasks.sync_characteristics",
-    #     "schedule": 60 * 60 * 24,
-    # },
-    # "sync_barcodes": {
-    #     "task": "products.tasks.sync_barcodes",
-    #     "schedule": 60,
-    # },
+    "sync-products": {"task": "products.tasks.sync_products", "schedule": 60 * 60 * 24},
+    "sync_price_types": {
+        "task": "products.tasks.sync_price_types",
+        "schedule": 60 * 60 * 24,
+    },
+    "sync_characteristics": {
+        "task": "products.tasks.sync_characteristics",
+        "schedule": 60 * 60 * 24,
+    },
+    "sync_barcodes": {
+        "task": "products.tasks.sync_barcodes",
+        "schedule": 60 * 60 * 24,
+    },
+    "sync_product_movements": {
+        "task": "products.tasks.sync_product_movements",
+        "schedule": 60 * 60 * 24,
+    },
+    "sync_price_changes": {
+        "task": "products.tasks.sync_price_changes",
+        "schedule": 60 * 60 * 24,
+    },
 }
 
 

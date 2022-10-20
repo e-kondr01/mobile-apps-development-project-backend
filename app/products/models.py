@@ -71,6 +71,8 @@ class Barcode(models.Model):
 
     barcode = models.CharField(max_length=255, verbose_name="Штрикход")
 
+    NOT_NATURAL_KEYS = tuple()
+
     def __str__(self) -> str:
         return f"Штрикод {self.product} {self.characteristic}"
 
@@ -104,12 +106,20 @@ class ProductMovement(models.Model):
 
     period = models.DateTimeField(verbose_name="Время и дата")
 
+    NOT_NATURAL_KEYS = tuple()
+
     def __str__(self) -> str:
         return f"Движение товара {self.product} {self.characteristic} {self.period} "
 
     class Meta:
         verbose_name = "Движение товара"
         verbose_name_plural = "Движения товаров"
+        constraints = [
+            models.UniqueConstraint(
+                name="unique_movement",
+                fields=("product", "characteristic", "period", "amount"),
+            )
+        ]
 
 
 class PriceChange(models.Model):
@@ -128,7 +138,7 @@ class PriceChange(models.Model):
         verbose_name="Характеристика",
     )
 
-    price = models.PositiveSmallIntegerField(verbose_name="Цена")
+    price = models.PositiveIntegerField(verbose_name="Цена")
 
     period = models.DateTimeField(verbose_name="Время и дата")
 
@@ -139,9 +149,17 @@ class PriceChange(models.Model):
         verbose_name="Вид цены",
     )
 
+    NOT_NATURAL_KEYS = ("price_type_id",)
+
     def __str__(self) -> str:
         return f"Изменение цены {self.product} {self.characteristic} {self.period}"
 
     class Meta:
         verbose_name = "Изменение цены"
         verbose_name_plural = "Изменения цены"
+        constraints = [
+            models.UniqueConstraint(
+                name="unique_price_change",
+                fields=("product", "characteristic", "period", "price"),
+            )
+        ]

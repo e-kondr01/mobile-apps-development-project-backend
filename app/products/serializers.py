@@ -44,3 +44,12 @@ class ProductMovementSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductMovement
         fields = "__all__"
+
+
+class ProductAmountSerializer(serializers.Serializer):
+    characteristic_id = serializers.UUIDField()
+    amount = serializers.IntegerField()
+
+
+class ProductPriceSerializer(ProductAmountSerializer):
+    price = serializers.IntegerField()

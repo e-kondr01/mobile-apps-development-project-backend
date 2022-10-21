@@ -9,4 +9,6 @@ urlpatterns = [
     path("price-changes", views.PriceChangeListView.as_view()),
     path("price-types", views.PriceTypeListView.as_view()),
     path("characteristics", views.CharacteristicListView.as_view()),
+    path("products/<str:pk>/amounts", views.ProductAmountsView.as_view()),
+    path("products/<str:pk>/prices", views.ProductPricesView.as_view()),
 ]

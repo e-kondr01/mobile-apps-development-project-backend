@@ -13,6 +13,64 @@ class Product(models.Model):
 
     sku = models.CharField(max_length=31, verbose_name="Артикул")
 
+    product_movements: models.Manager
+
+    def get_characteristic_ids(self):
+        """
+        Список ID характеристик, которые есть у данного товара
+        в таблице движений товара.
+        """
+        return self.product_movements.values_list(
+            "characteristic_id", flat=True
+        ).distinct()
+
+    def get_price(self, characteristic_id: str) -> int:
+        """
+        Актуальная цена товара с переданной характеристикой
+        """
+        return (
+            PriceChange.objects.filter(
+                characteristic_id=characteristic_id, product=self
+            )
+            .first()
+            .price
+        )
+
+    def get_amount(self, characteristic_id: str) -> int:
+        """
+        Остатки товара с переданной характеристикой
+        """
+        return ProductMovement.objects.filter(
+            characteristic_id=characteristic_id, product=self
+        ).aggregate(models.Sum("amount"))["amount__sum"]
+
+    def get_amounts(self) -> dict[str, str | int]:
+        """
+        Возвращает остатки по всем характеристикам товара.
+        """
+        amounts = []
+        for characteristic_id in self.get_characteristic_ids():
+            amount = self.get_amount(characteristic_id)
+            amounts.append({"characteristic_id": characteristic_id, "amount": amount})
+        return amounts
+
+    def get_prices(self) -> dict[str, str | int]:
+        """
+        Возвращает остатки и актуальную стоимость по всем характеристикам товара.
+        """
+        prices = []
+        for characteristic_id in self.get_characteristic_ids():
+            amount = self.get_amount(characteristic_id)
+            price = self.get_price(characteristic_id)
+            prices.append(
+                {
+                    "characteristic_id": characteristic_id,
+                    "amount": amount,
+                    "price": price,
+                }
+            )
+        return prices
+
     def __str__(self) -> str:
         return self.name
 
@@ -164,25 +222,3 @@ class PriceChange(models.Model):
             )
         ]
         ordering = ("-period",)
-
-
-def get_price(characteristic, product):
-    return (
-        PriceChange.objects.filter(characteristic=characteristic, product=product)
-        .first()
-        .price
-    )
-
-
-def get_amount(characteristic, product):
-    return ProductMovement.objects.filter(
-        characteristic=characteristic, product=product
-    ).aggregate(models.Sum("amount"))["amount__sum"]
-
-
-def get_products_characteristic_ids(product):
-    return (
-        ProductMovement.objects.filter(product=product)
-        .values_list("characteristic_id", flat=True)
-        .distinct()
-    )

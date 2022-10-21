@@ -1,4 +1,6 @@
-from rest_framework.generics import ListAPIView
+from drf_spectacular.utils import OpenApiResponse, extend_schema
+from rest_framework.generics import GenericAPIView, ListAPIView
+from rest_framework.response import Response
 
 from .models import (
     Barcode,
@@ -13,7 +15,9 @@ from .serializers import (
     CharacteristicSerializer,
     PriceChangeSerializer,
     PriceTypeSerializer,
+    ProductAmountSerializer,
     ProductMovementSerializer,
+    ProductPriceSerializer,
     ProductSerializer,
 )
 
@@ -46,3 +50,23 @@ class ProductMovementListView(ListAPIView):
 class ProductListView(ListAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+
+
+@extend_schema(responses=ProductAmountSerializer(many=True))
+class ProductAmountsView(GenericAPIView):
+    queryset = Product.objects.all()
+    pagination_class = None
+
+    def get(self, _, *args, **kwargs):
+        product: Product = self.get_object()
+        return Response(product.get_amounts())
+
+
+@extend_schema(responses=ProductPriceSerializer(many=True))
+class ProductPricesView(GenericAPIView):
+    queryset = Product.objects.all()
+    pagination_class = None
+
+    def get(self, _, *args, **kwargs):
+        product: Product = self.get_object()
+        return Response(product.get_prices())

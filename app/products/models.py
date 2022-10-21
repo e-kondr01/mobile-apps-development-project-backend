@@ -163,3 +163,26 @@ class PriceChange(models.Model):
                 fields=("product", "characteristic", "period", "price"),
             )
         ]
+        ordering = ("-period",)
+
+
+def get_price(characteristic, product):
+    return (
+        PriceChange.objects.filter(characteristic=characteristic, product=product)
+        .first()
+        .price
+    )
+
+
+def get_amount(characteristic, product):
+    return ProductMovement.objects.filter(
+        characteristic=characteristic, product=product
+    ).aggregate(models.Sum("amount"))["amount__sum"]
+
+
+def get_products_characteristic_ids(product):
+    return (
+        ProductMovement.objects.filter(product=product)
+        .values_list("characteristic_id", flat=True)
+        .distinct()
+    )

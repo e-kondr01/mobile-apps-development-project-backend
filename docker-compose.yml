@@ -21,7 +21,28 @@ services:
       gunicorn -w 3 app.wsgi:application --bind 0.0.0.0:8000 --reload"
     volumes:
       - ./app:/app
-    ports:
-      - "8000:8000"
+    expose:
+      - 8000
     depends_on:
       - postgres
+
+  celery:
+    restart: always
+    build: ./app
+    command: celery -A app worker -B -l INFO
+    volumes:
+      - ./app:/app
+    depends_on:
+      - postgres
+
+  redis:
+    image: redis:7.0.4
+    expose:
+      - 6379
+
+  nginx:
+    build: nginx
+    ports:
+      - "8200:80"
+    depends_on:
+      - backend

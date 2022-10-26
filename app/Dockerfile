@@ -13,6 +13,7 @@ ENV PYTHONUNBUFFERED 1
 
 # ставим зависимости
 RUN pip install --upgrade pip
+COPY requirements/base.txt base.txt
 COPY requirements/production.txt requirements.txt
 RUN pip install -r requirements.txt
 

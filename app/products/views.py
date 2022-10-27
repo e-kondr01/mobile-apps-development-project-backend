@@ -1,6 +1,9 @@
-from drf_spectacular.utils import OpenApiResponse, extend_schema
+from urllib import response
+
+from drf_spectacular.utils import extend_schema
 from rest_framework.generics import GenericAPIView, ListAPIView
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from .models import (
     Barcode,
@@ -19,6 +22,7 @@ from .serializers import (
     ProductMovementSerializer,
     ProductPriceSerializer,
     ProductSerializer,
+    SyncDataSerializer,
 )
 
 
@@ -50,6 +54,31 @@ class ProductMovementListView(ListAPIView):
 class ProductListView(ListAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+
+
+class SyncDataView(APIView):
+    """
+    Данные по всем таблицам
+    """
+
+    serializer_class = SyncDataSerializer
+
+    def get(self, _):
+        resp_body = {
+            "barcodes": BarcodeSerializer(Barcode.objects.all(), many=True).data,
+            "characteristics": CharacteristicSerializer(
+                Characteristic.objects.all(), many=True
+            ).data,
+            "price_changes": PriceChangeSerializer(
+                PriceChange.objects.all(), many=True
+            ).data,
+            "price_types": PriceTypeSerializer(PriceType.objects.all(), many=True).data,
+            "product_movements": ProductMovementSerializer(
+                ProductMovement.objects.all(), many=True
+            ).data,
+            "products": ProductSerializer(Product.objects.all(), many=True).data,
+        }
+        return Response(resp_body)
 
 
 @extend_schema(responses=ProductAmountSerializer(many=True))

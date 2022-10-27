@@ -11,4 +11,5 @@ urlpatterns = [
     path("characteristics", views.CharacteristicListView.as_view()),
     path("products/<str:pk>/amounts", views.ProductAmountsView.as_view()),
     path("products/<str:pk>/prices", views.ProductPricesView.as_view()),
+    path("sync-data", views.SyncDataView.as_view()),
 ]

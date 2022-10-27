@@ -53,3 +53,12 @@ class ProductAmountSerializer(serializers.Serializer):
 
 class ProductPriceSerializer(ProductAmountSerializer):
     price = serializers.IntegerField()
+
+
+class SyncDataSerializer(serializers.Serializer):
+    barcodes = BarcodeSerializer(many=True)
+    products = ProductSerializer(many=True)
+    characteristics = CharacteristicSerializer(many=True)
+    price_changes = PriceChangeSerializer(many=True)
+    price_types = PriceTypeSerializer(many=True)
+    product_movements = ProductMovementSerializer(many=True)

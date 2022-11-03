@@ -233,15 +233,11 @@ DJOSER = {
 
 # Simple JWT
 
-SIMPLE_JWT = {"ROTATE_REFRESH_TOKENS": True}
-
-if DEBUG:
-    SIMPLE_JWT.update(
-        {
-            "ACCESS_TOKEN_LIFETIME": timedelta(days=365),
-            "REFRESH_TOKEN_LIFETIME": timedelta(days=366),
-        }
-    )
+SIMPLE_JWT = {
+    "ROTATE_REFRESH_TOKENS": True,
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=365),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=366),
+}
 
 # Celery conf
 REDIS_HOST = env.str("REDIS_HOST", "redis")

@@ -18,7 +18,7 @@ test_refresh_token = env.str("TEST_REFRESH_TOKEN", "string")
             value={
                 "access": test_access_token,
                 "refresh": test_refresh_token,
-                "is_staff": True,
+                "groups": [{"id": 1, "name": "Администратор"}],
             },
             response_only=True,
         )

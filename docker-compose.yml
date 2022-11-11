@@ -18,7 +18,7 @@ services:
     build: ./app
     command: bash -c "
       python manage.py migrate &&
-      gunicorn -w 3 app.wsgi:application --bind 0.0.0.0:8000 --reload"
+      gunicorn app.wsgi:application --bind 0.0.0.0:8000 --reload"
     volumes:
       - ./app:/app
     expose:

@@ -15,14 +15,23 @@ class Product(models.Model):
 
     product_movements: models.Manager
 
+    price_changes: models.Manager
+
     def get_characteristic_ids(self):
         """
         Список ID характеристик, которые есть у данного товара
         в таблице движений товара.
         """
-        return self.product_movements.values_list(
-            "characteristic_id", flat=True
-        ).distinct()
+        pm_characteristics = set(
+            self.product_movements.values_list(
+                "characteristic_id", flat=True
+            ).distinct()
+        )
+        pc_characteristics = set(
+            self.price_changes.values_list("characteristic_id", flat=True).distinct()
+        )
+        pm_characteristics.update(pc_characteristics)
+        return pm_characteristics
 
     def get_price(self, characteristic_id: str) -> int:
         """
